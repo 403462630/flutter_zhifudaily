@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/widget/CircleIndicator.dart';
-import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
+import 'package:flutter_zhifudaily/widget/FcPageView.dart';
 
 class HomeBanner<T> extends StatefulWidget {
   final PageController pageController = new PageController();
@@ -24,39 +24,32 @@ class HomeBanner<T> extends StatefulWidget {
 class _HomeBannerState extends State<HomeBanner> {
   int currentIndex = 0;
 
-  void _updateCurrentIndex(int index) {
-    this.currentIndex = index;
-    setState(() {});
+  void updateCurrentIndex(int index) {
+    setState(() {
+      this.currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    int size = widget.data.length;
-
     return new Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
-        new PageView.builder(
-
-//          children: _newImagePages(context, size),
-          onPageChanged: (int page) {
-            showToast("page $page");
-            _updateCurrentIndex(page);
-          },
-          controller: widget.pageController,
-          itemBuilder: (context, index) {
-            print("index: $index");
+        new LoopPageView(
+          itemPage: (BuildContext context, int index) {
+            print("itemPage--index: $index");
             return new Image.asset("images/lake.jpeg", fit: BoxFit.fill);
           },
-          itemCount: 10,
-
-//          childrenDelegate: new SliverChildBuilderDelegate(
-//            (context, index) => new Image.asset("images/lake.jpeg", fit: BoxFit.fill),
-//            childCount: 10,
-//          ),
+          currentIndex: 0,
+          data: widget.data,
+          isLoop: true,
+          onPageChanged: (index) {
+            print("onPageChanged--index: $index");
+            updateCurrentIndex(index);
+          },
         ),
         new CircleIndicator(
-          size: 10,
+          size: widget.data.length,
           currentIndex: currentIndex,
           style: new CircleIndicatorStyle(
             margin: EdgeInsets.only(bottom: 5.0),
@@ -64,13 +57,5 @@ class _HomeBannerState extends State<HomeBanner> {
         ),
       ],
     );
-  }
-
-  List<Widget> _newImagePages(BuildContext context, int size) {
-    List<Widget> widgets = [];
-    for (int i = 0; i < size; i++) {
-      widgets.add(new Image.asset("images/lake.jpeg", fit: BoxFit.fill));
-    }
-    return widgets;
   }
 }

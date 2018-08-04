@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildBody(BuildContext context) {
     HomeBanner homeBanner = new HomeBanner(
-      data: [1, 2, 3, 4, 5, 6],
+      data: [1, 2, 3],
     );
     return new Column(
       children: <Widget>[
