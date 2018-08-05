@@ -11,6 +11,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int currentIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void setCurrentIndex(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +39,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildBody(BuildContext context) {
-    HomeBanner homeBanner = new HomeBanner(
-      data: [1, 2, 3],
-    );
     return new Column(
       children: <Widget>[
         new Container(
           height: 200.0,
-          child: homeBanner,
+          child: new HomeBanner(
+            data: [1, 2, 3, 4, 5, 6],
+            currentIndex: currentIndex,
+          ),
         ),
         new Expanded(
           child: new Column(
             children: <Widget>[
               new IconButton(icon: new Icon(Icons.add), onPressed: () {
-                homeBanner.setCurrentIndex(3);
+                setCurrentIndex(3);
               })
             ],
           ),

@@ -3,21 +3,19 @@ import 'package:flutter_zhifudaily/widget/CircleIndicator.dart';
 import 'package:flutter_zhifudaily/widget/FcPageView.dart';
 
 class HomeBanner<T> extends StatefulWidget {
-  final PageController pageController = new PageController();
   final List<T> data;
-
+  final int currentIndex;
+  final bool isLoop;
   HomeBanner({
     Key key,
     this.data,
+    this.currentIndex,
+    this.isLoop: true,
   }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return new _HomeBannerState();
-  }
-
-  void setCurrentIndex(int index) {
-    pageController.jumpToPage(index);
   }
 }
 
@@ -31,18 +29,25 @@ class _HomeBannerState extends State<HomeBanner> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.currentIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("homebanner build currentIndex: $currentIndex");
     return new Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
-        new LoopPageView(
+        new FcPageView(
           itemPage: (BuildContext context, int index) {
             print("itemPage--index: $index");
             return new Image.asset("images/lake.jpeg", fit: BoxFit.fill);
           },
-          currentIndex: 0,
+          currentIndex: currentIndex,
           data: widget.data,
-          isLoop: true,
+          isLoop: widget.isLoop,
           onPageChanged: (index) {
             print("onPageChanged--index: $index");
             updateCurrentIndex(index);

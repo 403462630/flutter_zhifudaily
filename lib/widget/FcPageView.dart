@@ -2,29 +2,37 @@ import 'package:flutter/material.dart';
 
 typedef Widget CreatePage(BuildContext context, int index);
 
-// ignore: must_be_immutable
-class LoopPageView<T> extends StatelessWidget {
-  final PageController _pageController;
+class FcPageView<T> extends StatefulWidget {
+  final PageController pageController;
   final List<T> data;
   final int currentIndex;
   final CreatePage itemPage;
   final ValueChanged<int> onPageChanged;
   final bool isLoop;
-  bool _flag = false; // 防止频繁调用jumpToPage方法，导致Stack Overflow error
 
-  LoopPageView({
+  FcPageView({
     Key key,
     this.data,
     int currentIndex,
     @required this.itemPage,
     this.onPageChanged,
     this.isLoop: false,
-  }) : _pageController = new PageController(initialPage: (isLoop ? currentIndex + 1 : currentIndex)),
+    PageController pageController,
+  }) : pageController = pageController == null ? new PageController(initialPage: isLoop ? (currentIndex + 1) : currentIndex) : pageController,
         currentIndex = isLoop ? currentIndex + 1 : currentIndex,
         super(key: key);
 
+  @override
+  State<StatefulWidget> createState() {
+    return new _FcPageViewState();
+  }
+}
+
+class _FcPageViewState extends State<FcPageView> {
+  bool _flag = false; // 防止频繁调用jumpToPage方法，导致Stack Overflow error
+
   int _getItemCount() {
-    return data == null || data.length == 0 ? 0 : (data.length + (isLoop ? 2 : 0));
+    return widget.data == null || widget.data.length == 0 ? 0 : (widget.data.length + (widget.isLoop ? 2 : 0));
   }
 
   @override
@@ -38,9 +46,9 @@ class LoopPageView<T> extends StatelessWidget {
       },
       child: new PageView.builder(
         onPageChanged: (int page) {},
-        controller: _pageController,
+        controller: widget.pageController,
         itemBuilder: (context, index) {
-          return itemPage(context, _getDataIndex(index));
+          return widget.itemPage(context, _getDataIndex(index));
         },
         itemCount: size,
       ),
@@ -48,7 +56,7 @@ class LoopPageView<T> extends StatelessWidget {
   }
 
   int _getDataIndex(int index) {
-    if (isLoop) {
+    if (widget.isLoop) {
       if (index == 0) {
         return _getItemCount() - 2 - 1;
       } else if (index == _getItemCount() - 1) {
@@ -62,33 +70,32 @@ class LoopPageView<T> extends StatelessWidget {
   }
 
   void _checkLoopPage() {
-    int page = _pageController.page.round();
-    if (isLoop) {
+    int page = widget.pageController.page.round();
+    if (widget.isLoop) {
       int index = 0;
       if (page == 0) {
         if (!_flag) {
           _flag = true;
           index = _getItemCount() - 2;
-          _pageController.jumpToPage(index);
+          widget.pageController.jumpToPage(index);
         }
       } else if (page == _getItemCount() - 1) {
         if (!_flag) {
           _flag = true;
           index = 1;
-          _pageController.jumpToPage(1);
+          widget.pageController.jumpToPage(1);
         }
       } else {
         _flag = false;
         index = page.toInt() - 1;
-        if (onPageChanged != null) {
-          onPageChanged(index);
+        if (widget.onPageChanged != null) {
+          widget.onPageChanged(index);
         }
       }
     } else {
-      if (onPageChanged != null) {
-        onPageChanged(page);
+      if (widget.onPageChanged != null) {
+        widget.onPageChanged(page);
       }
     }
   }
 }
-
