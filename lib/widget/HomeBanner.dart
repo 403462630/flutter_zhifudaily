@@ -36,20 +36,20 @@ class _HomeBannerState extends State<HomeBanner> {
 
   @override
   Widget build(BuildContext context) {
-    print("homebanner build currentIndex: $currentIndex");
     return new Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
         new FcPageView(
           itemPage: (BuildContext context, int index) {
-            print("itemPage--index: $index");
+//            print("itemPage--index: $index");
             return new Image.asset("images/lake.jpeg", fit: BoxFit.fill);
           },
           currentIndex: currentIndex,
           data: widget.data,
           isLoop: widget.isLoop,
+          timerSeconds: 5,
           onPageChanged: (index) {
-            print("onPageChanged--index: $index");
+//            print("onPageChanged--index: $index");
             updateCurrentIndex(index);
           },
         ),

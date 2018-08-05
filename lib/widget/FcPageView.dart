@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 typedef Widget CreatePage(BuildContext context, int index);
@@ -9,6 +11,7 @@ class FcPageView<T> extends StatefulWidget {
   final CreatePage itemPage;
   final ValueChanged<int> onPageChanged;
   final bool isLoop;
+  final int timerSeconds;
 
   FcPageView({
     Key key,
@@ -17,6 +20,7 @@ class FcPageView<T> extends StatefulWidget {
     @required this.itemPage,
     this.onPageChanged,
     this.isLoop: false,
+    this.timerSeconds,
     PageController pageController,
   }) : pageController = pageController == null ? new PageController(initialPage: isLoop ? (currentIndex + 1) : currentIndex) : pageController,
         currentIndex = isLoop ? currentIndex + 1 : currentIndex,
@@ -30,9 +34,32 @@ class FcPageView<T> extends StatefulWidget {
 
 class _FcPageViewState extends State<FcPageView> {
   bool _flag = false; // 防止频繁调用jumpToPage方法，导致Stack Overflow error
-
+  Timer _timer;
+  int _timerSeconds;
   int _getItemCount() {
     return widget.data == null || widget.data.length == 0 ? 0 : (widget.data.length + (widget.isLoop ? 2 : 0));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._timerSeconds = widget.timerSeconds;
+    _initTimer();
+  }
+
+  @override
+  void didUpdateWidget(FcPageView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_timerSeconds != widget.timerSeconds) {
+      _timerSeconds = widget.timerSeconds;
+      _initTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _cancelTimer();
   }
 
   @override
@@ -97,5 +124,23 @@ class _FcPageViewState extends State<FcPageView> {
         widget.onPageChanged(page);
       }
     }
+  }
+  
+  void _initTimer() {
+    _timer?.cancel();
+    if (_timerSeconds != null && _timerSeconds > 0) {
+//      print("_initTimer");
+      _timer = new Timer.periodic(Duration(seconds: _timerSeconds), (timer) {
+        if (widget.pageController.hasClients) {
+          int page = widget.pageController.page.round();
+          widget.pageController.animateToPage(page + 1, duration: Duration(milliseconds: 250), curve: Curves.linear);
+        }
+      });
+    }
+  }
+
+  void _cancelTimer() {
+    _timer?.cancel();
+    _timer = null;
   }
 }
