@@ -37,7 +37,7 @@ class _FcPageViewState extends State<FcPageView> {
   Timer _timer;
   int _timerSeconds;
   int _getItemCount() {
-    return widget.data == null || widget.data.length == 0 ? 0 : (widget.data.length + (widget.isLoop ? 2 : 0));
+    return (widget.data == null || widget.data.length == 0) ? 0 : (widget.data.length + (widget.isLoop ? 2 : 0));
   }
 
   @override
@@ -60,6 +60,7 @@ class _FcPageViewState extends State<FcPageView> {
   void dispose() {
     super.dispose();
     _cancelTimer();
+    widget.pageController.dispose();
   }
 
   @override

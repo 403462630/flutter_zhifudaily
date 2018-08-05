@@ -19,7 +19,7 @@ class HomeBanner<T> extends StatefulWidget {
   }
 }
 
-class _HomeBannerState extends State<HomeBanner> {
+class _HomeBannerState extends State<HomeBanner> with AutomaticKeepAliveClientMixin {
   int currentIndex = 0;
 
   void updateCurrentIndex(int index) {
@@ -32,6 +32,25 @@ class _HomeBannerState extends State<HomeBanner> {
   void initState() {
     super.initState();
     currentIndex = widget.currentIndex;
+    print("homebanner initState");
+  }
+
+  @override
+  void didUpdateWidget(HomeBanner oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("homebanner didUpdateWidget");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("homebanner didChangeDependencies");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("homebanner dispose");
   }
 
   @override
@@ -54,7 +73,7 @@ class _HomeBannerState extends State<HomeBanner> {
           },
         ),
         new CircleIndicator(
-          size: widget.data.length,
+          size: widget.data != null ? widget.data.length : 0,
           currentIndex: currentIndex,
           style: new CircleIndicatorStyle(
             margin: EdgeInsets.only(bottom: 5.0),
@@ -63,4 +82,7 @@ class _HomeBannerState extends State<HomeBanner> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

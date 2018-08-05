@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/style/AppBarStyle.dart';
+import 'package:flutter_zhifudaily/style/style.dart';
+import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
-import 'package:flutter_zhifudaily/widget/HomeBanner.dart';
+import 'package:flutter_zhifudaily/adapter/home_list_adapter.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,17 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentIndex = 1;
+  HomeListAdapter homeListAdapter;
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void setCurrentIndex(int index) {
-    setState(() {
-      currentIndex = index;
-    });
+    homeListAdapter = new HomeListAdapter(
+      bannerData: [1, 2, 3, 4, 5],
+      data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      currentIndex: 0,
+    );
   }
 
   @override
@@ -29,35 +30,59 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: buildAppBar(context),
       body: buildBody(context),
+      drawer: buildDrawer(context),
+    );
+  }
+
+  Widget buildDrawer(BuildContext context) {
+    return new Container(
+      color: Colors.white,
+      width: 300.0,
+      child: new ListView(
+        children: <Widget>[
+          new ListTile(
+            leading: new Icon(Icons.change_history),
+            title: new Text('Change history'),
+            onTap: () {
+              // change app state...
+              Navigator.pop(context); // close the drawer
+            },
+          ),
+        ],
+      ),
     );
   }
 
   Widget buildAppBar(BuildContext context) {
     return new AppBar(
-      title: new Text("首页", style: AppBarStyle.buildTitleStyle(),),
+      title: new Text("首页", style: Style.buildTitleStyle()),
+      actions: <Widget>[
+        new IconButton( // action button
+          icon: new Icon(Icons.swap_vertical_circle),
+          onPressed: () {  },
+        ),
+        new PopupMenuButton(
+          itemBuilder: (BuildContext context) {
+            return [
+              new PopupMenuItem(child: new Text("夜间模式")),
+              new PopupMenuItem(child: new Text("设置选项")),
+            ];
+          },
+        ),
+      ],
     );
   }
 
   Widget buildBody(BuildContext context) {
-    return new Column(
-      children: <Widget>[
-        new Container(
-          height: 200.0,
-          child: new HomeBanner(
-            data: [1, 2, 3, 4, 5, 6],
-            currentIndex: currentIndex,
-          ),
-        ),
-        new Expanded(
-          child: new Column(
-            children: <Widget>[
-              new IconButton(icon: new Icon(Icons.add), onPressed: () {
-                setCurrentIndex(3);
-              })
-            ],
-          ),
-        ),
-      ],
+    return new Container(
+      color: bg_window,
+      child: new ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return homeListAdapter.getWidget(context, index);
+        },
+        physics: BouncingScrollPhysics(),
+        itemCount: homeListAdapter.getItemCount(),
+      ),
     );
   }
 }
