@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/widget/CircleIndicator.dart';
-import 'package:flutter_zhifudaily/widget/FcPageView.dart';
+import 'package:flutter_zhifudaily/widget/circle_indicator.dart';
+import 'package:flutter_zhifudaily/widget/fc_page_view.dart';
 
 class HomeBanner<T> extends StatefulWidget {
   final List<T> data;

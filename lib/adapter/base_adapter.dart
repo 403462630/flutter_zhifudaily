@@ -9,13 +9,19 @@ abstract class BaseAdapter<T> {
     return data == null ? 0 : data.length;
   }
 
+  T getItem(int position) {
+    return data != null && data.length > position ? data[position] : null;
+  }
+
+  @protected
   int getItemType(int position) {
     return 0;
   }
 
   Widget getWidget(BuildContext context, int position) {
-    return onCreateWidget(context, getItemType(position));
+    return onCreateWidget(context, getItemType(position), position);
   }
 
-  Widget onCreateWidget(BuildContext context, int type);
+  @protected
+  Widget onCreateWidget(BuildContext context, int type, int position);
 }

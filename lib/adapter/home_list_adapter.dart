@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
-import 'package:flutter_zhifudaily/widget/HomeBanner.dart';
+import 'package:flutter_zhifudaily/widget/home_banner.dart';
 
 class HomeListAdapter<T> extends BaseAdapter<T> {
   static const int TYPE_HOME_BANNER = 1;
@@ -16,6 +16,7 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
     this.currentIndex: 0,
   }) : super(data: data);
 
+  @protected
   @override
   int getItemType(int position) {
     if (position == 0) {
@@ -30,8 +31,9 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
     return super.getItemCount() + 1;
   }
 
+  @protected
   @override
-  Widget onCreateWidget(BuildContext context, int type) {
+  Widget onCreateWidget(BuildContext context, int type, int position) {
     switch (type) {
       case TYPE_HOME_BANNER:
         return onCreateBannerWidget(context);
@@ -44,6 +46,7 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
     }
   }
 
+  @protected
   Widget onCreateBannerWidget(BuildContext context) {
     return new Container(
       height: 200.0,
@@ -55,6 +58,7 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
     );
   }
 
+  @protected
   Widget onCreateTitleWidget(BuildContext context) {
     return new Container(
       height: 40.0,
@@ -63,6 +67,7 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
     );
   }
 
+  @protected
   Widget onCreateContentWidget(BuildContext context) {
     return new Container(
       margin: EdgeInsets.only(bottom: 8.0, left: 12.0, right: 12.0),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
 import 'package:flutter_zhifudaily/adapter/home_list_adapter.dart';
+import 'package:flutter_zhifudaily/page/home_drawer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,25 +32,10 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: buildAppBar(context),
       body: buildBody(context),
-      drawer: buildDrawer(context),
-    );
-  }
-
-  Widget buildDrawer(BuildContext context) {
-    return new Container(
-      color: Colors.white,
-      width: 300.0,
-      child: new ListView(
-        children: <Widget>[
-          new ListTile(
-            leading: new Icon(Icons.change_history),
-            title: new Text('Change history'),
-            onTap: () {
-              // change app state...
-              Navigator.pop(context); // close the drawer
-            },
-          ),
-        ],
+      drawer: new MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: new HomeDrawer(),
       ),
     );
   }

@@ -17,4 +17,18 @@ class Style {
       color: text_color_list_item_context,
     );
   }
+
+  static TextStyle buildDrawerItemTextStyle() {
+    return new TextStyle(
+      fontSize: text_size_medium,
+      color: text_color_list_item_context,
+    );
+  }
+
+  static TextStyle buildDrawerHomeItemTextStyle() {
+    return new TextStyle(
+      fontSize: text_size_medium,
+      color: app_blue,
+    );
+  }
 }
