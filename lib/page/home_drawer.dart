@@ -1,39 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
+import 'package:flutter_zhifudaily/data/drawer_item.dart';
 
 class HomeDrawer extends StatefulWidget {
+  final List<DrawerItem> data;
+  final int selectedIndex;
+  final ItemClick drawerItemClick;
+  final ItemCollectClick itemCollectClick;
 
   @override
   State<StatefulWidget> createState() {
+    print("====HomeDrawer createState====");
     return new _HomeDrawerState();
   }
 
+  HomeDrawer({
+    Key key,
+    this.data,
+    this.selectedIndex = 0,
+    this.drawerItemClick,
+    this.itemCollectClick,
+  }) : super(key: key);
 }
 
-class _HomeDrawerState extends State<HomeDrawer> {
+class _HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMixin {
   HomeDrawerAdapter homeDrawerAdapter;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    this._selectedIndex = widget.selectedIndex;
     homeDrawerAdapter = new HomeDrawerAdapter(
-      data: [
-        "日常心里学",
-        "用户推荐日报",
-        "电影日报",
-        "不许无聊",
-        "设计日报",
-        "大公司日报",
-        "财经日报",
-        "互联网安全",
-        "开始游戏",
-        "音乐日报",
-        "动漫日报",
-        "体育日报"],
+      data: widget.data,
       itemClick: (data, index) {
         _updateItemSelected(index);
-      }
+        if (widget.drawerItemClick != null) {
+          widget.drawerItemClick(data, index);
+        }
+      },
+      collectClick: (data, index) {
+        if (widget.itemCollectClick != null) {
+          widget.itemCollectClick(data, index);
+        }
+      },
+      selectedIndex: _selectedIndex,
     );
   }
 
@@ -47,6 +58,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    print("====HomeDrawer build====");
     return new Container(
       color: Colors.white,
       width: 300.0,
@@ -58,4 +70,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

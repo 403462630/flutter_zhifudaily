@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
+import 'package:flutter_zhifudaily/data/drawer_item.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 
-typedef void ItemClick(String data, int position);
-typedef void ItemCollectClick(String data, int position);
+typedef void ItemClick(DrawerItem data, int position);
+typedef void ItemCollectClick(DrawerItem data, int position);
 
-class HomeDrawerAdapter<String> extends BaseAdapter<String> {
+class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
   static const int TYPE_HOME_TITLE = 1;
   static const int TYPE_HOME_ITEM = 2;
   static const int TYPE_HOME_OTHER_ITEM = 3;
-  int selectedIndex = 1;
+  int selectedIndex = 0;
   ItemClick itemClick;
   ItemCollectClick collectClick;
 
   HomeDrawerAdapter({
-    List<String> data,
+    List<DrawerItem> data,
     this.itemClick,
     this.collectClick,
+    this.selectedIndex = 0,
   }) : super(data: data);
 
   @override
   int getItemCount() {
-    return super.getItemCount() + 2;
+    return super.getItemCount() + 1;
   }
 
   @protected
@@ -108,16 +110,17 @@ class HomeDrawerAdapter<String> extends BaseAdapter<String> {
   }
 
   Widget onCreateHomeItemWidget(BuildContext context, int position) {
-    bool isSelected = selectedIndex == position;
+    int dataPosition = position - 1;
+    bool isSelected = selectedIndex == dataPosition;
     return new GestureDetector(
       onTap: () {
         if (itemClick != null) {
-          itemClick("首页", position);
+          itemClick(getItem(dataPosition), dataPosition);
         }
       },
       child: new Container(
         color: isSelected ? bg_home_drawer_item_selected : bg_home_drawer_item_normal,
-        height: 40.0,
+        height: 45.0,
         padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: new Row(
           children: <Widget>[
@@ -136,32 +139,32 @@ class HomeDrawerAdapter<String> extends BaseAdapter<String> {
 
   @protected
   Widget onCreateItemWidget(BuildContext context, int position) {
-    int dataPosition = position - 2;
-    String title = getItem(dataPosition);
-    bool isSelected = selectedIndex == position;
+    int dataPosition = position - 1;
+    DrawerItem drawerItem = getItem(dataPosition);
+    bool isSelected = selectedIndex == dataPosition;
     bool isCollect = false;
     return new GestureDetector(
       onTap: () {
         if (itemClick != null) {
-          itemClick("$title", position);
+          itemClick(drawerItem, dataPosition);
         }
       },
       child: new Container(
         color: isSelected ? bg_home_drawer_item_selected : bg_home_drawer_item_normal,
-        height: 40.0,
+        height: 45.0,
         padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(
-              "$title",
+              "${drawerItem.title}",
               style: Style.buildDrawerItemTextStyle(),
             ),
             new IconButton(
               icon: Icon(isCollect ? Icons.chevron_right : Icons.add, color: Color(0xffc9c9c9), size: 15.0),
               onPressed: () {
                 if (collectClick != null) {
-                  collectClick("$title", position);
+                  collectClick(drawerItem, dataPosition);
                 }
               }
             ),

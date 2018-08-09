@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
+import 'package:flutter_zhifudaily/data/drawer_item.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
@@ -15,7 +16,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeListAdapter homeListAdapter;
-  int currentIndex = 0;
+  int bannerIndex = 0;
+  int drawerIndex = 0;
+  GlobalKey<ScaffoldState> homeDrawerKey = new GlobalKey();
+  List<DrawerItem> drawerData;
 
   @override
   void initState() {
@@ -25,6 +29,27 @@ class _HomePageState extends State<HomePage> {
       data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       currentIndex: 0,
     );
+    drawerData = [
+      new DrawerItem("首页", true),
+      new DrawerItem("日常心里学", false),
+      new DrawerItem("用户推荐日报", false),
+      new DrawerItem("电影日报", false),
+      new DrawerItem("不许无聊", false),
+      new DrawerItem("设计日报", false),
+      new DrawerItem("大公司日报", false),
+      new DrawerItem("财经日报", false),
+      new DrawerItem("互联网安全", false),
+      new DrawerItem("开始游戏", false),
+      new DrawerItem("音乐日报", false),
+      new DrawerItem("动漫日报", false),
+      new DrawerItem("体育日报", false)];
+  }
+
+  void _onDrawerItemClick(int index) {
+    setState(() {
+      drawerIndex = index;
+      Navigator.of(context).pop(); // close the drawer
+    });
   }
 
   @override
@@ -35,14 +60,21 @@ class _HomePageState extends State<HomePage> {
       drawer: new MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        child: new HomeDrawer(),
+        child: new HomeDrawer(
+          key: homeDrawerKey,
+          data: drawerData,
+          selectedIndex: drawerIndex,
+          drawerItemClick: (data, index) {
+            _onDrawerItemClick(index);
+          },
+        ),
       ),
     );
   }
 
   Widget buildAppBar(BuildContext context) {
     return new AppBar(
-      title: new Text("首页", style: Style.buildTitleStyle()),
+      title: new Text("${drawerData[drawerIndex].title}", style: Style.buildTitleStyle()),
       actions: <Widget>[
         new IconButton( // action button
           icon: new Icon(Icons.swap_vertical_circle),
