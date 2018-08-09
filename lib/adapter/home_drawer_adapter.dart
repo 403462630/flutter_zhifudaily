@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
 import 'package:flutter_zhifudaily/data/drawer_item.dart';
+import 'package:flutter_zhifudaily/page/login_page.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
+import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 
 typedef void ItemClick(DrawerItem data, int position);
 typedef void ItemCollectClick(DrawerItem data, int position);
@@ -54,16 +56,21 @@ class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
       padding: EdgeInsets.only(top: 34.0, left: 15.0, right: 15.0, bottom: 15.0),
       child: new Column(
         children: <Widget>[
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Image.asset("images/ic_default_avatar.png", height: 40.0,),
-              new Padding(padding: EdgeInsets.only(left: 10.0)),
-              new Text("请登录", style: new TextStyle(
-                fontSize: text_size_medium,
-                color: Colors.white,
-              ))
-            ],
+          new GestureDetector(
+            onTap: () {
+              gotoLogin(context);
+            },
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Image.asset("images/ic_default_avatar.png", height: 40.0,),
+                new Padding(padding: EdgeInsets.only(left: 10.0)),
+                new Text("请登录", style: new TextStyle(
+                  fontSize: text_size_medium,
+                  color: Colors.white,
+                ))
+              ],
+            ),
           ),
           new Expanded(child: Padding(padding: EdgeInsets.only(top: 0.0))),
           new Row(
@@ -142,7 +149,7 @@ class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
     int dataPosition = position - 1;
     DrawerItem drawerItem = getItem(dataPosition);
     bool isSelected = selectedIndex == dataPosition;
-    bool isCollect = false;
+    bool isCollect = getItem(dataPosition).isCollect;
     return new GestureDetector(
       onTap: () {
         if (itemClick != null) {

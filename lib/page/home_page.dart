@@ -52,6 +52,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _onCollectItemClick(int index) {
+    setState(() {
+      drawerData[index].isCollect = !drawerData[index].isCollect;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -66,6 +72,9 @@ class _HomePageState extends State<HomePage> {
           selectedIndex: drawerIndex,
           drawerItemClick: (data, index) {
             _onDrawerItemClick(index);
+          },
+          itemCollectClick: (data, index) {
+            _onCollectItemClick(index);
           },
         ),
       ),
