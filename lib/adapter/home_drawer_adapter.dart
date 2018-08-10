@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
-import 'package:flutter_zhifudaily/data/drawer_item.dart';
 import 'package:flutter_zhifudaily/page/login_page.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
+import 'package:flutter_zhifudaily/data/theme.dart';
 
-typedef void ItemClick(DrawerItem data, int position);
-typedef void ItemCollectClick(DrawerItem data, int position);
+typedef void ItemClick(NewsTheme data, int position);
+typedef void ItemCollectClick(NewsTheme data, int position);
 
-class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
+class HomeDrawerAdapter extends BaseAdapter<NewsTheme> {
   static const int TYPE_HOME_TITLE = 1;
   static const int TYPE_HOME_ITEM = 2;
   static const int TYPE_HOME_OTHER_ITEM = 3;
@@ -19,7 +19,7 @@ class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
   ItemCollectClick collectClick;
 
   HomeDrawerAdapter({
-    List<DrawerItem> data,
+    List<NewsTheme> data,
     this.itemClick,
     this.collectClick,
     this.selectedIndex = 0,
@@ -147,7 +147,7 @@ class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
   @protected
   Widget onCreateItemWidget(BuildContext context, int position) {
     int dataPosition = position - 1;
-    DrawerItem drawerItem = getItem(dataPosition);
+    NewsTheme drawerItem = getItem(dataPosition);
     bool isSelected = selectedIndex == dataPosition;
     bool isCollect = getItem(dataPosition).isCollect;
     return new GestureDetector(
@@ -164,7 +164,7 @@ class HomeDrawerAdapter extends BaseAdapter<DrawerItem> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(
-              "${drawerItem.title}",
+              "${drawerItem.name}",
               style: Style.buildDrawerItemTextStyle(),
             ),
             new IconButton(

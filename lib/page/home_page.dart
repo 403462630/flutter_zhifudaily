@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
+import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
 import 'package:flutter_zhifudaily/data/drawer_item.dart';
+import 'package:flutter_zhifudaily/data/result.dart';
+import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
@@ -18,9 +21,9 @@ class _HomePageState extends State<HomePage> {
   HomeListAdapter homeListAdapter;
   int bannerIndex = 0;
   int drawerIndex = 0;
-  GlobalKey<ScaffoldState> homeDrawerKey = new GlobalKey();
-  List<DrawerItem> drawerData;
-
+  GlobalKey<HomeDrawerState> homeDrawerKey = new GlobalKey();
+  List<NewsTheme> drawerData; // 暂时只能放在homepage里，因为每次打开drawer都会重新创建HomeDrawerState，无法保持数据
+  NewsTheme index;
   @override
   void initState() {
     super.initState();
@@ -29,20 +32,25 @@ class _HomePageState extends State<HomePage> {
       data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       currentIndex: 0,
     );
-    drawerData = [
-      new DrawerItem("首页", true),
-      new DrawerItem("日常心里学", false),
-      new DrawerItem("用户推荐日报", false),
-      new DrawerItem("电影日报", false),
-      new DrawerItem("不许无聊", false),
-      new DrawerItem("设计日报", false),
-      new DrawerItem("大公司日报", false),
-      new DrawerItem("财经日报", false),
-      new DrawerItem("互联网安全", false),
-      new DrawerItem("开始游戏", false),
-      new DrawerItem("音乐日报", false),
-      new DrawerItem("动漫日报", false),
-      new DrawerItem("体育日报", false)];
+    index = new NewsTheme(name: "首页");
+    drawerData = [index];
+//    loadDrawerData();
+  }
+
+  void loadDrawerData() async {
+    Result<ThemeResult> result = await ZhiFuNewsApi().getThemeList();
+    print("loadDrawerData");
+    if (result.isSuccess()) {
+      if (homeDrawerKey.currentState == null) {
+        setState(() {
+          drawerData = [index]..addAll(result.data.others);
+        });
+      } else {
+        drawerData = [index]..addAll(result.data.others);
+        homeDrawerKey.currentState.updateData(drawerData);
+      }
+    }
+//    Result<ThemeNews> themeNews = await ZhiFuNewsApi().getThemeNewsList(result.data.others[0].id);
   }
 
   void _onDrawerItemClick(int index) {
@@ -76,6 +84,11 @@ class _HomePageState extends State<HomePage> {
           itemCollectClick: (data, index) {
             _onCollectItemClick(index);
           },
+          onOpenDrawer: () {
+            if (drawerData == null || drawerData.length <= 1) {
+              loadDrawerData();
+            }
+          },
         ),
       ),
     );
@@ -83,7 +96,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildAppBar(BuildContext context) {
     return new AppBar(
-      title: new Text("${drawerData[drawerIndex].title}", style: Style.buildTitleStyle()),
+      title: new Text("${drawerData[drawerIndex].name}", style: Style.buildTitleStyle()),
       actions: <Widget>[
         new IconButton( // action button
           icon: new Icon(Icons.swap_vertical_circle),

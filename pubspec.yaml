@@ -9,6 +9,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   fluttertoast: ^2.0.7
+  dio: ^0.1.8
 
 dev_dependencies:
   flutter_test:

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
-import 'package:flutter_zhifudaily/data/drawer_item.dart';
+import 'package:flutter_zhifudaily/data/theme.dart';
+
+typedef void OnOpenDrawer();
 
 class HomeDrawer extends StatefulWidget {
-  final List<DrawerItem> data;
+  final List<NewsTheme> data;
   final int selectedIndex;
   final ItemClick drawerItemClick;
   final ItemCollectClick itemCollectClick;
+  final OnOpenDrawer onOpenDrawer;
 
   @override
   State<StatefulWidget> createState() {
     print("====HomeDrawer createState====");
-    return new _HomeDrawerState();
+    return new HomeDrawerState();
   }
 
   HomeDrawer({
@@ -20,10 +23,11 @@ class HomeDrawer extends StatefulWidget {
     this.selectedIndex = 0,
     this.drawerItemClick,
     this.itemCollectClick,
+    this.onOpenDrawer,
   }) : super(key: key);
 }
 
-class _HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMixin {
+class HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMixin {
   HomeDrawerAdapter homeDrawerAdapter;
   int _selectedIndex = 0;
 
@@ -33,6 +37,7 @@ class _HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMi
     this._selectedIndex = widget.selectedIndex;
     homeDrawerAdapter = new HomeDrawerAdapter(
       data: widget.data,
+      selectedIndex: _selectedIndex,
       itemClick: (data, index) {
         _updateItemSelected(index);
         if (widget.drawerItemClick != null) {
@@ -44,14 +49,23 @@ class _HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMi
           widget.itemCollectClick(data, index);
         }
       },
-      selectedIndex: _selectedIndex,
     );
+    if (widget.onOpenDrawer != null) {
+      widget.onOpenDrawer();
+    }
+  }
+
+  updateData(List<NewsTheme> data) {
+    setState(() {
+      widget.data.clear();
+      widget.data.addAll(data);
+      homeDrawerAdapter.data = widget.data;
+    });
   }
 
   _updateItemSelected(int index) {
     setState(() {
       _selectedIndex = index;
-      print("selectedIndex: $_selectedIndex");
       homeDrawerAdapter.selectedIndex = _selectedIndex;
     });
   }

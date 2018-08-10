@@ -1,22 +1,36 @@
 import 'package:flutter_zhifudaily/data/editor.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
 
-class Theme {
+class ThemeResult {
+  int limit;
+  List subscribed;
+  List<NewsTheme> others;
+
+  ThemeResult({
+    this.limit,
+    this.subscribed,
+    this.others,
+  });
+}
+
+class NewsTheme {
   int id;
   String name;
   int color;
   String thumbnail;
   String description;
+  bool isCollect = false;
 
-  Theme({
+  NewsTheme({
     this.id,
     this.name,
     this.color,
     this.thumbnail,
-    this.description
+    this.description,
+    this.isCollect = false,
   });
 
-  Theme.fromJson(Map<String, dynamic> json)
+  NewsTheme.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         name = json["name"],
         color = json["color"],
@@ -24,7 +38,7 @@ class Theme {
         description = json["description"];
 }
 
-class ThemeDetail {
+class ThemeNews {
   List<Stories> stories;
   List<Editor> editors;
   String name;
@@ -33,7 +47,7 @@ class ThemeDetail {
   String description;
   String background;
 
-  ThemeDetail({
+  ThemeNews({
     this.stories,
     this.editors,
     this.name,
