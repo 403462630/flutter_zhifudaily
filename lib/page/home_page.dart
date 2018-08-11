@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<HomeDrawerState> homeDrawerKey = new GlobalKey();
   List<NewsTheme> drawerData; // 暂时只能放在homepage里，因为每次打开drawer都会重新创建HomeDrawerState，无法保持数据
   NewsTheme index;
+  ScrollController scrollController;
   @override
   void initState() {
     super.initState();
@@ -34,6 +37,23 @@ class _HomePageState extends State<HomePage> {
     );
     index = new NewsTheme(name: "首页");
     drawerData = [index];
+    scrollController = new ScrollController();
+    scrollController.addListener(() {
+//      print(scrollController.position);
+      ScrollPositionWithSingleContext position = scrollController.position;
+      if (position.pixels > position.maxScrollExtent && !homeListAdapter.isLoading()) {
+        homeListAdapter.notifyLoading();
+        setState(() {});
+        Timer(Duration(seconds: 5), () {
+          print("Timer");
+          setState(() {
+            homeListAdapter.notifyNormal();
+            homeListAdapter.data.addAll([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+          });
+        });
+//        print("loading");
+      }
+    });
 //    loadDrawerData();
   }
 
@@ -123,6 +143,7 @@ class _HomePageState extends State<HomePage> {
         },
         physics: BouncingScrollPhysics(),
         itemCount: homeListAdapter.getItemCount(),
+        controller: scrollController,
       ),
     );
   }

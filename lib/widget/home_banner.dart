@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/widget/circle_indicator.dart';
 import 'package:flutter_zhifudaily/widget/fc_page_view.dart';
 
+typedef void HomeBannerChanged(int index);
+
+// 暂时只能用DataController保存和更新数据, 因为_HomeBannerState 总是被重新创建，无法保存数据
+class _DataController<T> {
+  List<T> data;
+  int currentIndex;
+  _DataController(this.data, this.currentIndex);
+}
+
 class HomeBanner<T> extends StatefulWidget {
-  final List<T> data;
-  final int currentIndex;
+  final _DataController<T> _dataController;
   final bool isLoop;
+  final HomeBannerChanged onBannerChanged;
   HomeBanner({
     Key key,
-    this.data,
-    this.currentIndex,
+    List<T> data,
+    int currentIndex,
     this.isLoop: true,
-  }) : super(key: key);
+    this.onBannerChanged,
+  }) : _dataController = new _DataController(data, currentIndex), super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,20 +29,20 @@ class HomeBanner<T> extends StatefulWidget {
   }
 }
 
-class _HomeBannerState extends State<HomeBanner> with AutomaticKeepAliveClientMixin {
-  int currentIndex = 0;
-
+class _HomeBannerState extends State<HomeBanner> {
   void updateCurrentIndex(int index) {
     setState(() {
-      this.currentIndex = index;
+      if (widget.onBannerChanged != null) {
+        widget.onBannerChanged(index);
+      }
+      widget._dataController.currentIndex = index;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    currentIndex = widget.currentIndex;
-    print("homebanner initState");
+    print("homebanner initState currentIndex: $widget.dataController.currentIndex");
   }
 
   @override
@@ -63,8 +73,8 @@ class _HomeBannerState extends State<HomeBanner> with AutomaticKeepAliveClientMi
 //            print("itemPage--index: $index");
             return new Image.asset("images/lake.jpeg", fit: BoxFit.fill);
           },
-          currentIndex: currentIndex,
-          data: widget.data,
+          currentIndex: widget._dataController.currentIndex,
+          data: widget._dataController.data,
           isLoop: widget.isLoop,
           timerSeconds: 5,
           onPageChanged: (index) {
@@ -73,8 +83,8 @@ class _HomeBannerState extends State<HomeBanner> with AutomaticKeepAliveClientMi
           },
         ),
         new CircleIndicator(
-          size: widget.data != null ? widget.data.length : 0,
-          currentIndex: currentIndex,
+          size: widget._dataController.data != null ? widget._dataController.data.length : 0,
+          currentIndex: widget._dataController.currentIndex,
           style: new CircleIndicatorStyle(
             margin: EdgeInsets.only(bottom: 5.0),
           ),
@@ -82,7 +92,4 @@ class _HomeBannerState extends State<HomeBanner> with AutomaticKeepAliveClientMi
       ],
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

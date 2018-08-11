@@ -6,6 +6,10 @@ abstract class BaseAdapter<T> {
   BaseAdapter({this.data});
 
   int getItemCount() {
+    return getDataCount();
+  }
+
+  int getDataCount() {
     return data == null ? 0 : data.length;
   }
 

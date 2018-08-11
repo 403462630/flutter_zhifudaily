@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
+import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/widget/home_banner.dart';
 
-class HomeListAdapter<T> extends BaseAdapter<T> {
+class HomeListAdapter<T> extends StateBaseAdapter<T> {
   static const int TYPE_HOME_BANNER = 1;
   static const int TYPE_HOME_TITLE = 2;
   static const int TYPE_HOME_CONTENT = 3;
@@ -20,7 +21,7 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
 
   @protected
   @override
-  int getItemType(int position) {
+  int getStateItemType(int position) {
     if (position == 0) {
       return TYPE_HOME_BANNER;
     } else {
@@ -29,13 +30,13 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
   }
 
   @override
-  int getItemCount() {
-    return super.getItemCount() + 1;
+  int getDataCount() {
+    return super.getDataCount() + 1;
   }
 
   @protected
   @override
-  Widget onCreateWidget(BuildContext context, int type, int position) {
+  Widget onStateCreateWidget(BuildContext context, int type, int position) {
     switch (type) {
       case TYPE_HOME_BANNER:
         return onCreateBannerWidget(context);
@@ -50,12 +51,16 @@ class HomeListAdapter<T> extends BaseAdapter<T> {
 
   @protected
   Widget onCreateBannerWidget(BuildContext context) {
+    print("onCreateBannerWidget");
     return new Container(
       height: 200.0,
       margin: EdgeInsets.only(bottom: 8.0),
       child: new HomeBanner(
         data: bannerData,
         currentIndex: currentIndex,
+        onBannerChanged: (index) {
+          currentIndex = index;
+        },
       ),
     );
   }
