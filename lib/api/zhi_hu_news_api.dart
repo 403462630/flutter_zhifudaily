@@ -29,6 +29,12 @@ abstract class ZhiFuNewsApi {
 
   /// 主题新闻列表--加载历史
   Future<Result<List<Stories>>> getThemeNewsListMore(int themeId, int lastStoriesId);
+
+  /// 首页新闻列表
+  Future<Result<HomeNews>> getHomeNewsList();
+
+  /// 首页新闻列表--加载历史
+  Future<Result<HomeNews>> getHomeNewsListMore(String date);
 }
 
 class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
@@ -112,6 +118,41 @@ class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
       Response response = await _dio.get("api/4/theme/" + themeId.toString() + "/before/" + lastStoriesId.toString());
       Result<List<Stories>> result = _parseResponse(response, (data) {
         return (data["stories"] as List).map((t) => Stories.fromJson(t)).toList();
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
+  }
+
+  @override
+  Future<Result<HomeNews>> getHomeNewsList() async {
+    try {
+      Response response = await _dio.get("api/4/news/latest");
+      Result<HomeNews> result = _parseResponse(response, (data) {
+        return new HomeNews(
+          stories: data["stories"] != null ? (data["stories"] as List).map((t) => Stories.fromJson(t)).toList() : null,
+          topStories: data["top_stories"] != null ? (data["top_stories"] as List).map((t) => TopStories.fromJson(t)).toList() : null,
+          date: data["date"],
+        );
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
+  }
+
+  @override
+  Future<Result<HomeNews>> getHomeNewsListMore(String date) async {
+    try {
+      Response response = await _dio.get("api/4/news/before/" + date);
+      Result<HomeNews> result = _parseResponse(response, (data) {
+        return new HomeNews(
+          stories: data["stories"] != null ? (data["stories"] as List).map((t) => Stories.fromJson(t)).toList() : null,
+          date: data["date"],
+        );
       });
       return result;
     } catch (e) {

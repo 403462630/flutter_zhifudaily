@@ -55,7 +55,7 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
   @protected
   Widget onCreateTopWidget(BuildContext context, int position) {
     return new Container(
-      height: 200.0,
+      height: 240.0,
       child: Stack(
         children: <Widget>[
           new SizedBox.expand(
@@ -63,7 +63,7 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
           ),
           new Positioned(
             left: 15.0,
-            top: 150.0,
+            top: 190.0,
             child: new Text(themeNews.description, style: new TextStyle(
               color: Colors.white,
               fontSize: text_size_normal,

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
 import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
-import 'package:flutter_zhifudaily/page/login_page.dart';
-import 'package:flutter_zhifudaily/style/color.dart';
-import 'package:flutter_zhifudaily/style/style.dart';
-import 'package:flutter_zhifudaily/style/dimen.dart';
-import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 import 'package:flutter_zhifudaily/data/theme.dart';
+import 'package:flutter_zhifudaily/style/color.dart';
+import 'package:flutter_zhifudaily/style/dimen.dart';
+import 'package:flutter_zhifudaily/style/style.dart';
+import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 
 typedef void ItemClick(NewsTheme data, int position);
 typedef void ItemCollectClick(NewsTheme data, int position);

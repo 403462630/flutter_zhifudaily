@@ -1,22 +1,21 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
 import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
+import 'package:flutter_zhifudaily/data/stories.dart';
+import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/widget/home_banner.dart';
 
-class HomeListAdapter<T> extends StateBaseAdapter<T> {
+class HomeListAdapter extends StateBaseAdapter<Stories> {
   static const int TYPE_HOME_BANNER = 1;
   static const int TYPE_HOME_TITLE = 2;
   static const int TYPE_HOME_CONTENT = 3;
   int currentIndex;
-  List bannerData;
+  HomeNews homeNews;
 
   HomeListAdapter({
-    List<T> data,
-    this.bannerData,
+    List<Stories> data,
     this.currentIndex: 0,
+    this.homeNews,
     ErrorStateClick errorClick,
   }) : super(data: data, errorClick: errorClick);
 
@@ -42,7 +41,7 @@ class HomeListAdapter<T> extends StateBaseAdapter<T> {
       case TYPE_HOME_BANNER:
         return onCreateBannerWidget(context);
       case TYPE_HOME_CONTENT:
-        return onCreateContentWidget(context);
+        return onCreateContentWidget(context, position);
       case TYPE_HOME_TITLE:
         return onCreateTitleWidget(context);
       default:
@@ -54,10 +53,10 @@ class HomeListAdapter<T> extends StateBaseAdapter<T> {
   Widget onCreateBannerWidget(BuildContext context) {
     print("onCreateBannerWidget");
     return new Container(
-      height: 200.0,
+      height: 240.0,
       margin: EdgeInsets.only(bottom: 8.0),
       child: new HomeBanner(
-        data: bannerData,
+        data: homeNews.topStories,
         currentIndex: currentIndex,
         onBannerChanged: (index) {
           currentIndex = index;
@@ -76,23 +75,29 @@ class HomeListAdapter<T> extends StateBaseAdapter<T> {
   }
 
   @protected
-  Widget onCreateContentWidget(BuildContext context) {
+  Widget onCreateContentWidget(BuildContext context, int position) {
+    int dataPosition = position - 1;
+    Stories stories = getItem(dataPosition);
+    String image = stories.images != null && stories.images.isNotEmpty ? stories.images[0] : null;
     return new Container(
       margin: EdgeInsets.only(bottom: 8.0, left: 12.0, right: 12.0),
       padding: EdgeInsets.all(8.0),
       color: Colors.white,
+      constraints: new BoxConstraints(
+        minHeight: 70.0,
+      ),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           new Expanded(
             child: new DefaultTextStyle(
               style: Style.buildItemTextStyle(),
-              child: new Text("如何整理冰如何整理冰箱如何整理冰箱如何整理冰箱如何整理冰箱如何整理冰箱如何整理冰箱箱如何整理冰箱"),
+              child: new Text(stories.title),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Image.asset("images/lake.jpeg", width: 100.0, height: 80.0, fit: BoxFit.contain,),
+          image != null ? Image.network(image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth) : Padding(padding: EdgeInsets.only(left: 0.0)),
         ],
       ),
     );

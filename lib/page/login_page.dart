@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 

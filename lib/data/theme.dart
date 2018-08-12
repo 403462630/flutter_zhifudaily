@@ -57,3 +57,15 @@ class ThemeNews {
     this.background
   });
 }
+
+class HomeNews {
+  String date;
+  List<Stories> stories;
+  List<TopStories> topStories;
+
+  HomeNews({
+    this.date,
+    this.stories,
+    this.topStories
+  });
+}

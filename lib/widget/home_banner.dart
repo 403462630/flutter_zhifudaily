@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/widget/circle_indicator.dart';
 import 'package:flutter_zhifudaily/widget/fc_page_view.dart';
+import 'package:flutter_zhifudaily/data/stories.dart';
 
 typedef void HomeBannerChanged(int index);
 
 // 暂时只能用DataController保存和更新数据, 因为_HomeBannerState 总是被重新创建，无法保存数据
-class _DataController<T> {
-  List<T> data;
+class _DataController<TopStories> {
+  List<TopStories> data;
   int currentIndex;
   _DataController(this.data, this.currentIndex);
 }
 
-class HomeBanner<T> extends StatefulWidget {
-  final _DataController<T> _dataController;
+class HomeBanner extends StatefulWidget {
+  final _DataController<TopStories> _dataController;
   final bool isLoop;
   final HomeBannerChanged onBannerChanged;
   HomeBanner({
     Key key,
-    List<T> data,
+    List<TopStories> data,
     int currentIndex,
     this.isLoop: true,
     this.onBannerChanged,
@@ -70,8 +72,27 @@ class _HomeBannerState extends State<HomeBanner> {
       children: <Widget>[
         new FcPageView(
           itemPage: (BuildContext context, int index) {
-//            print("itemPage--index: $index");
-            return new Image.asset("images/lake.jpeg", fit: BoxFit.fill);
+            return new Stack(
+              alignment: Alignment.bottomLeft,
+              children: <Widget>[
+                new SizedBox.expand(
+                  child: new Image.network(widget._dataController.data[index].image, fit: BoxFit.fill),
+                ),
+                new Container(
+                  height: 50.0,
+                  child: new DefaultTextStyle(
+                    child: new Text(widget._dataController.data[index].title),
+                    style: new TextStyle(
+                      color: Colors.white,
+                      fontSize: text_size_normal,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                ),
+              ],
+            );
           },
           currentIndex: widget._dataController.currentIndex,
           data: widget._dataController.data,
