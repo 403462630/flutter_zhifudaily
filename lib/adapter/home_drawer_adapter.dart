@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
+import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
 import 'package:flutter_zhifudaily/page/login_page.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_zhifudaily/data/theme.dart';
 typedef void ItemClick(NewsTheme data, int position);
 typedef void ItemCollectClick(NewsTheme data, int position);
 
-class HomeDrawerAdapter extends BaseAdapter<NewsTheme> {
+class HomeDrawerAdapter extends StateBaseAdapter<NewsTheme> {
   static const int TYPE_HOME_TITLE = 1;
   static const int TYPE_HOME_ITEM = 2;
   static const int TYPE_HOME_OTHER_ITEM = 3;
@@ -26,19 +27,19 @@ class HomeDrawerAdapter extends BaseAdapter<NewsTheme> {
   }) : super(data: data);
 
   @override
-  int getItemCount() {
-    return super.getItemCount() + 1;
+  int getDataCount() {
+    return super.getDataCount() + 1;
   }
 
   @protected
   @override
-  int getItemType(int position) {
+  int getStateItemType(int position) {
     return position == 0 ? TYPE_HOME_TITLE : (position == 1 ? TYPE_HOME_ITEM : TYPE_HOME_OTHER_ITEM);
   }
 
   @protected
   @override
-  Widget onCreateWidget(BuildContext context, int type, int position) {
+  Widget onStateCreateWidget(BuildContext context, int type, int position) {
     if (type == TYPE_HOME_TITLE) {
       return onCreateTitleWidget(context, position);
     } else if (type == TYPE_HOME_ITEM) {

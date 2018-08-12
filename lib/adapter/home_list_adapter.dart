@@ -17,7 +17,8 @@ class HomeListAdapter<T> extends StateBaseAdapter<T> {
     List<T> data,
     this.bannerData,
     this.currentIndex: 0,
-  }) : super(data: data);
+    ErrorStateClick errorClick,
+  }) : super(data: data, errorClick: errorClick);
 
   @protected
   @override

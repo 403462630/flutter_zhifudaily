@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/base_adapter.dart';
-
+typedef void ErrorStateClick();
 abstract class StateBaseAdapter<T> extends BaseAdapter<T> {
   static const int _TYPE_NONE = -1000;
   static const int _TYPE_LOADING = -1001;
@@ -16,6 +16,7 @@ abstract class StateBaseAdapter<T> extends BaseAdapter<T> {
   String allHint;
   String loadingHint;
   TextStyle hintStyle;
+  ErrorStateClick errorClick;
   StateBaseAdapter({
     List<T> data,
     this.emptyHint = "暂无数据",
@@ -26,6 +27,7 @@ abstract class StateBaseAdapter<T> extends BaseAdapter<T> {
       fontSize: 13.0,
       color: Color(0xffcccccc),
     ),
+    this.errorClick,
   }) : super(data: data);
 
   bool isNormal() {
@@ -67,7 +69,6 @@ abstract class StateBaseAdapter<T> extends BaseAdapter<T> {
   void notifyError() {
     _currentState = _TYPE_ERROR;
   }
-
 
   @override
   int getItemCount() {
@@ -135,7 +136,10 @@ abstract class StateBaseAdapter<T> extends BaseAdapter<T> {
 
   @protected
   Widget onCreateErrorWidget(BuildContext context, int position) {
-    return _createCurrentStateWidget(errorHint);
+    return new GestureDetector(
+      onTap: errorClick,
+      child: _createCurrentStateWidget(errorHint),
+    );
   }
 
   @protected

@@ -4,9 +4,20 @@ import 'package:flutter_zhifudaily/data/theme.dart';
 
 typedef void OnOpenDrawer();
 
+// 暂时只能用DataController保存和更新数据, 因为State 总是被重新创建，无法保存数据, 用AutomaticKeepAliveClientMixin 有bug
+class _DataController {
+  List<NewsTheme> data;
+  int selectedIndex;
+
+  _DataController(this.data, this.selectedIndex);
+
+  bool hasData() {
+    return data != null && data.length > 2;
+  }
+}
+
 class HomeDrawer extends StatefulWidget {
-  final List<NewsTheme> data;
-  final int selectedIndex;
+  final _DataController _dataController;
   final ItemClick drawerItemClick;
   final ItemCollectClick itemCollectClick;
   final OnOpenDrawer onOpenDrawer;
@@ -19,25 +30,23 @@ class HomeDrawer extends StatefulWidget {
 
   HomeDrawer({
     Key key,
-    this.data,
-    this.selectedIndex = 0,
+    List<NewsTheme> data,
+    int selectedIndex = 0,
     this.drawerItemClick,
     this.itemCollectClick,
     this.onOpenDrawer,
-  }) : super(key: key);
+  }) : _dataController = new _DataController(data, selectedIndex), super(key: key);
 }
 
-class HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMixin {
+class HomeDrawerState extends State<HomeDrawer> {
   HomeDrawerAdapter homeDrawerAdapter;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    this._selectedIndex = widget.selectedIndex;
     homeDrawerAdapter = new HomeDrawerAdapter(
-      data: widget.data,
-      selectedIndex: _selectedIndex,
+      data: widget._dataController.data,
+      selectedIndex: widget._dataController.selectedIndex,
       itemClick: (data, index) {
         _updateItemSelected(index);
         if (widget.drawerItemClick != null) {
@@ -45,11 +54,16 @@ class HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMix
         }
       },
       collectClick: (data, index) {
+        _updateItemCollect(data);
         if (widget.itemCollectClick != null) {
           widget.itemCollectClick(data, index);
         }
       },
     );
+    if (!widget._dataController.hasData()) {
+      homeDrawerAdapter.notifyLoading();
+    }
+
     if (widget.onOpenDrawer != null) {
       widget.onOpenDrawer();
     }
@@ -57,16 +71,22 @@ class HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMix
 
   updateData(List<NewsTheme> data) {
     setState(() {
-      widget.data.clear();
-      widget.data.addAll(data);
-      homeDrawerAdapter.data = widget.data;
+      widget._dataController.data.clear();
+      widget._dataController.data.addAll(data);
+      homeDrawerAdapter.notifyNormal();
+      homeDrawerAdapter.data = widget._dataController.data;
     });
   }
 
+  _updateItemCollect(NewsTheme data) {
+    setState(() {
+      data.isCollect = !data.isCollect;
+    });
+  }
   _updateItemSelected(int index) {
     setState(() {
-      _selectedIndex = index;
-      homeDrawerAdapter.selectedIndex = _selectedIndex;
+      widget._dataController.selectedIndex = index;
+      homeDrawerAdapter.selectedIndex = widget._dataController.selectedIndex;
     });
   }
 
@@ -84,7 +104,4 @@ class HomeDrawerState extends State<HomeDrawer> with AutomaticKeepAliveClientMix
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
