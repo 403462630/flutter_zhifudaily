@@ -26,6 +26,9 @@ abstract class ZhiFuNewsApi {
 
   /// 主题新闻列表
   Future<Result<ThemeNews>> getThemeNewsList(int themeId);
+
+  /// 主题新闻列表--加载历史
+  Future<Result<List<Stories>>> getThemeNewsListMore(int themeId, int lastStoriesId);
 }
 
 class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
@@ -51,6 +54,7 @@ class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
       try {
         result.data = fn(response.data);
       } catch (e) {
+        print(e);
         result.code = 500;
         result.message = "数据解析失败";
       }
@@ -62,34 +66,58 @@ class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
 
   @override
   Future<Result<ThemeResult>> getThemeList() async {
-    Response response = await _dio.get("api/4/themes");
-    Result<ThemeResult> result = _parseResponse(response, (data) {
-      ThemeResult themeResult = new ThemeResult(
-        limit: data["limit"],
-        subscribed: data["subscribed"],
-        others: (data["others"] as List).map((t) => NewsTheme.fromJson(t)).toList(),
-      );
-      return themeResult;
-    });
-    return result;
+    try {
+      Response response = await _dio.get("api/4/themes");
+      Result<ThemeResult> result = _parseResponse(response, (data) {
+        ThemeResult themeResult = new ThemeResult(
+          limit: data["limit"],
+          subscribed: data["subscribed"],
+          others: (data["others"] as List).map((t) => NewsTheme.fromJson(t)).toList(),
+        );
+        return themeResult;
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
   }
 
   @override
   Future<Result<ThemeNews>> getThemeNewsList(int themeId) async {
-    Response response = await _dio.get("api/4/theme/" + themeId.toString());
-    Result<ThemeNews> result = _parseResponse(response, (data) {
-      ThemeNews themeNews = new ThemeNews(
-        color: data["color"],
-        background: data["background"],
-        description: data["description"],
-        image: data["image"],
-        name: data["name"],
-        editors: (data["editors"] as List).map((t) => Editor.fromJson(t)).toList(),
-        stories: (data["stories"] as List).map((t) => Stories.fromJson(t)).toList(),
-      );
-      return themeNews;
-    });
-    return result;
+    try {
+      Response response = await _dio.get("api/4/theme/" + themeId.toString());
+      Result<ThemeNews> result = _parseResponse(response, (data) {
+        ThemeNews themeNews = new ThemeNews(
+          color: data["color"],
+          background: data["background"],
+          description: data["description"],
+          image: data["image"],
+          name: data["name"],
+          editors: (data["editors"] as List).map((t) => Editor.fromJson(t)).toList(),
+          stories: (data["stories"] as List).map((t) => Stories.fromJson(t)).toList(),
+        );
+        return themeNews;
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
+  }
+
+  @override
+  Future<Result<List<Stories>>> getThemeNewsListMore(int themeId, int lastStoriesId) async {
+    try {
+      Response response = await _dio.get("api/4/theme/" + themeId.toString() + "/before/" + lastStoriesId.toString());
+      Result<List<Stories>> result = _parseResponse(response, (data) {
+        return (data["stories"] as List).map((t) => Stories.fromJson(t)).toList();
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
   }
 }
 

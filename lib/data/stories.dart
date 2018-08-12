@@ -18,7 +18,7 @@ class Stories {
       : type = json["type"],
         id = json["id"],
         title = json["title"],
-        images = json["images"],
+        images = json["images"] == null ? null : (json["images"] as List<dynamic>).map<String>((f) => f).toList(),
         gaPrefix = json["ga_prefix"];
 }
 

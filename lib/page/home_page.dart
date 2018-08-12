@@ -1,16 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_zhifudaily/adapter/home_drawer_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
-import 'package:flutter_zhifudaily/data/drawer_item.dart';
 import 'package:flutter_zhifudaily/data/result.dart';
 import 'package:flutter_zhifudaily/data/theme.dart';
-import 'package:flutter_zhifudaily/style/style.dart';
-import 'package:flutter_zhifudaily/style/color.dart';
-import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
-import 'package:flutter_zhifudaily/adapter/home_list_adapter.dart';
+import 'package:flutter_zhifudaily/fragment/home_fragment.dart';
+import 'package:flutter_zhifudaily/fragment/news_list_fragment.dart';
 import 'package:flutter_zhifudaily/page/home_drawer.dart';
+import 'package:flutter_zhifudaily/style/style.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,40 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeListAdapter homeListAdapter;
-  int bannerIndex = 0;
-  int drawerIndex = 0;
   GlobalKey<HomeDrawerState> homeDrawerKey = new GlobalKey();
   List<NewsTheme> drawerData; // 暂时只能放在homepage里，因为每次打开drawer都会重新创建HomeDrawerState，无法保持数据
   NewsTheme index;
-  ScrollController scrollController;
+  int drawerIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    homeListAdapter = new HomeListAdapter(
-      bannerData: [1, 2, 3, 4, 5],
-      data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-      currentIndex: 0,
-    );
     index = new NewsTheme(name: "首页");
     drawerData = [index];
-    scrollController = new ScrollController();
-    scrollController.addListener(() {
-//      print(scrollController.position);
-      ScrollPositionWithSingleContext position = scrollController.position;
-      if (position.pixels > position.maxScrollExtent && !homeListAdapter.isLoading()) {
-        homeListAdapter.notifyLoading();
-        setState(() {});
-        Timer(Duration(seconds: 5), () {
-          print("Timer");
-          setState(() {
-            homeListAdapter.notifyNormal();
-            homeListAdapter.data.addAll([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-          });
-        });
-//        print("loading");
-      }
-    });
 //    loadDrawerData();
   }
 
@@ -126,16 +97,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildBody(BuildContext context) {
-    return new Container(
-      color: bg_window,
-      child: new ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return homeListAdapter.getWidget(context, index);
-        },
-        physics: BouncingScrollPhysics(),
-        itemCount: homeListAdapter.getItemCount(),
-        controller: scrollController,
-      ),
-    );
+    if (drawerIndex == 0) {
+      return new HomeFragment();
+    } else {
+      return new NewsListFragment(drawerData[drawerIndex]);
+    }
   }
 }
