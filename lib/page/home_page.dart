@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   GlobalKey<HomeDrawerState> homeDrawerKey = new GlobalKey();
+  GlobalKey appBarKey = new GlobalKey();
   List<NewsTheme> drawerData; // 暂时只能放在homepage里，因为每次打开drawer都会重新创建HomeDrawerState，无法保持数据
   NewsTheme index;
   int drawerIndex = 0;
@@ -51,6 +52,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  updateItemCollect(NewsTheme data) {
+    setState(() {
+      data.isCollect = !data.isCollect;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -66,6 +73,9 @@ class _HomePageState extends State<HomePage> {
           drawerItemClick: (data, index) {
             _onDrawerItemClick(index);
           },
+          itemCollectClick: (data, index) {
+            updateItemCollect(data);
+          },
           onOpenDrawer: () {
             if (drawerData == null || drawerData.length <= 1) {
               loadDrawerData();
@@ -77,22 +87,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildAppBar(BuildContext context) {
+    List<Widget> actions = [];
+    if (drawerIndex == 0) {
+      actions.add(new IconButton( // action button
+        icon: new Icon(Icons.notifications, color: Colors.white),
+        onPressed: () {  },
+      ));
+      actions.add(new PopupMenuButton(
+        itemBuilder: (BuildContext context) {
+          return [
+            new PopupMenuItem(child: new Text("夜间模式")),
+            new PopupMenuItem(child: new Text("设置选项")),
+          ];
+        },
+      ));
+    } else {
+      actions.add(new IconButton( // action button
+        icon: new Icon(drawerData[drawerIndex].isCollect ? Icons.remove_circle_outline : Icons.add_circle_outline, color: Colors.white),
+        onPressed: () {
+          updateItemCollect(drawerData[drawerIndex]);
+        },
+      ));
+    }
     return new AppBar(
+      key: appBarKey,
       title: new Text("${drawerData[drawerIndex].name}", style: Style.buildTitleStyle()),
-      actions: <Widget>[
-        new IconButton( // action button
-          icon: new Icon(Icons.swap_vertical_circle),
-          onPressed: () {  },
-        ),
-        new PopupMenuButton(
-          itemBuilder: (BuildContext context) {
-            return [
-              new PopupMenuItem(child: new Text("夜间模式")),
-              new PopupMenuItem(child: new Text("设置选项")),
-            ];
-          },
-        ),
-      ],
+      actions: actions,
     );
   }
 

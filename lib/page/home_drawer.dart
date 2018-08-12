@@ -54,7 +54,6 @@ class HomeDrawerState extends State<HomeDrawer> {
         }
       },
       collectClick: (data, index) {
-        _updateItemCollect(data);
         if (widget.itemCollectClick != null) {
           widget.itemCollectClick(data, index);
         }
@@ -78,11 +77,6 @@ class HomeDrawerState extends State<HomeDrawer> {
     });
   }
 
-  _updateItemCollect(NewsTheme data) {
-    setState(() {
-      data.isCollect = !data.isCollect;
-    });
-  }
   _updateItemSelected(int index) {
     setState(() {
       widget._dataController.selectedIndex = index;
