@@ -5,6 +5,7 @@ import 'package:flutter_zhifudaily/data/result.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
 import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
+import 'package:flutter_zhifudaily/widget/progress_widget.dart';
 
 class NewsListFragment extends StatefulWidget {
   final NewsTheme theme;
@@ -22,10 +23,12 @@ class _NewsListFragmentState extends State<NewsListFragment> {
   NewsListAdapter _adapter;
   NewsTheme _theme;
   ScrollController scrollController;
+  ProgressWidgetType progressWidgetType;
 
   @override
   void initState() {
     super.initState();
+    progressWidgetType = ProgressWidgetType.LOADING;
     _theme = widget.theme;
     _adapter = new NewsListAdapter(
       errorClick: () {
@@ -48,13 +51,16 @@ class _NewsListFragmentState extends State<NewsListFragment> {
 
   void loadData() async {
     Result<ThemeNews> result = await ZhiFuNewsApi().getThemeNewsList(_theme.id);
-    if (result.isSuccess()) {
-      setState(() {
+    setState(() {
+      if (result.isSuccess()) {
+        progressWidgetType = ProgressWidgetType.CONTENT;
         _adapter.notifyNormal();
         _adapter.themeNews = result.data;
         _adapter.data = _adapter.themeNews.stories;
-      });
-    }
+      } else {
+        progressWidgetType = ProgressWidgetType.ERROR;
+      }
+    });
   }
 
   void loadMore() async {
@@ -82,6 +88,7 @@ class _NewsListFragmentState extends State<NewsListFragment> {
     print("NewsListFragment didUpdateWidget");
     if (_theme.id != widget.theme.id) {
       _theme = widget.theme;
+      progressWidgetType = ProgressWidgetType.LOADING;
       loadData();
     }
   }
@@ -89,15 +96,23 @@ class _NewsListFragmentState extends State<NewsListFragment> {
   @override
   Widget build(BuildContext context) {
     print("NewsListFragment build size: ${_adapter.getItemCount()}");
-    return new Container(
-      color: bg_window,
-      child: new ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return _adapter.getWidget(context, index);
-        },
-        physics: BouncingScrollPhysics(),
-        itemCount: _adapter.getItemCount(),
-        controller: scrollController,
+    return new ProgressWidget(
+      type: progressWidgetType,
+      errorClick: () {
+        progressWidgetType = ProgressWidgetType.LOADING;
+        setState(() {});
+        loadData();
+      },
+      contentWidget: new Container(
+        color: bg_window,
+        child: new ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return _adapter.getWidget(context, index);
+          },
+          physics: BouncingScrollPhysics(),
+          itemCount: _adapter.getItemCount(),
+          controller: scrollController,
+        ),
       ),
     );
   }
