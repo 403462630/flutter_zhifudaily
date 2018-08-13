@@ -5,6 +5,7 @@ import 'package:flutter_zhifudaily/data/stories.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
+import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 
 class NewsListAdapter extends StateBaseAdapter<Stories> {
   static const int TYPE_HOME_TOP = 1;
@@ -79,10 +80,15 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
     return new Container(
       height: 50.0,
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: _createEditors(),
+      child: new GestureDetector(
+        onTap: () {
+          gotoEditorListPage(context, themeNews.editors);
+        },
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: _createEditors(),
+        ),
       ),
     );
   }
