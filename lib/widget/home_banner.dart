@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
+import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 import 'package:flutter_zhifudaily/widget/circle_indicator.dart';
 import 'package:flutter_zhifudaily/widget/fc_page_view.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
@@ -76,7 +77,12 @@ class _HomeBannerState extends State<HomeBanner> {
               alignment: Alignment.bottomLeft,
               children: <Widget>[
                 new SizedBox.expand(
-                  child: new Image.network(widget._dataController.data[index].image, fit: BoxFit.fill),
+                  child: new GestureDetector(
+                    onTap: () {
+                      gotoNewsDetailPage(context, widget._dataController.data[index].id);
+                    },
+                    child: new Image.network(widget._dataController.data[index].image, fit: BoxFit.fill),
+                  ),
                 ),
                 new Container(
                   height: 50.0,
