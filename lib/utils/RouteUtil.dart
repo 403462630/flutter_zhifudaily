@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/page/login_page.dart';
 import 'package:flutter_zhifudaily/page/news_detail_page.dart';
+import 'package:flutter_zhifudaily/page/web_view_page.dart';
 
 void gotoLogin(BuildContext context) {
   Navigator.of(context).push(new PageRouteBuilder(
@@ -20,7 +21,7 @@ void gotoLogin(BuildContext context) {
   ));
 }
 
-void gotoWebView(BuildContext context, int id) {
+void gotoNewsDetailPage(BuildContext context, int id) {
   Navigator.of(context).push(new PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
         return new NewsDetailPage(id: id);
@@ -33,6 +34,20 @@ void gotoWebView(BuildContext context, int id) {
 //          ),
 //          opacity: animation,
 //        );
+        return new SlideTransition(
+          child: child,
+          position: new Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero).animate(animation),
+        );
+      }
+  ));
+}
+
+void gotoWebViewPage(BuildContext context, String url, String title) {
+  Navigator.of(context).push(new PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return new WebViewPage(url: url, title: title);
+      },
+      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
         return new SlideTransition(
           child: child,
           position: new Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero).animate(animation),
