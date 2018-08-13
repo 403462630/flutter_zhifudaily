@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/news_list_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
@@ -50,7 +52,8 @@ class _NewsListFragmentState extends State<NewsListFragment> {
     loadData();
   }
 
-  void loadData() async {
+  /// 因为onRefresh 需要返回Future
+  Future<Null> loadData() async {
     Result<ThemeNews> result = await ZhiFuNewsApi().getThemeNewsList(_theme.id);
     setState(() {
       if (result.isSuccess()) {
@@ -62,6 +65,7 @@ class _NewsListFragmentState extends State<NewsListFragment> {
         progressWidgetType = ProgressWidgetType.ERROR;
       }
     });
+    return null;
   }
 
   void loadMore() async {
@@ -106,13 +110,16 @@ class _NewsListFragmentState extends State<NewsListFragment> {
       },
       contentWidget: new Container(
         color: bg_window,
-        child: new ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return _adapter.getWidget(context, index);
-          },
-          physics: BouncingScrollPhysics(),
-          itemCount: _adapter.getItemCount(),
-          controller: scrollController,
+        child: new RefreshIndicator(
+          child: new ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return _adapter.getWidget(context, index);
+            },
+            physics: BouncingScrollPhysics(),
+            itemCount: _adapter.getItemCount(),
+            controller: scrollController,
+          ),
+          onRefresh: loadData,
         ),
       ),
     );

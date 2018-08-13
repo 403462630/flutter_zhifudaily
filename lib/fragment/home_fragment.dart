@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_list_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
@@ -18,7 +20,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   HomeListAdapter homeListAdapter;
   ScrollController scrollController;
   ProgressWidgetType progressWidgetType;
-
+  GlobalKey<RefreshIndicatorState> refreshKey = new GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -46,7 +48,8 @@ class _HomeFragmentState extends State<HomeFragment> {
     loadData();
   }
 
-  void loadData() async {
+  /// 因为onRefresh 需要返回Future
+  Future<Null> loadData() async {
     Result<HomeNews> result = await ZhiFuNewsApi().getHomeNewsList();
     setState(() {
       if (result.isSuccess()) {
@@ -58,6 +61,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         progressWidgetType = ProgressWidgetType.ERROR;
       }
     });
+    return null;
   }
 
   void loadMore() async {
@@ -86,13 +90,16 @@ class _HomeFragmentState extends State<HomeFragment> {
       },
       contentWidget: new Container(
         color: bg_window,
-        child: new ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return homeListAdapter.getWidget(context, index);
-          },
-          physics: BouncingScrollPhysics(),
-          itemCount: homeListAdapter.getItemCount(),
-          controller: scrollController,
+        child: new RefreshIndicator(
+          child: new ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return homeListAdapter.getWidget(context, index);
+            },
+            physics: BouncingScrollPhysics(),
+            itemCount: homeListAdapter.getItemCount(),
+            controller: scrollController,
+          ),
+          onRefresh: loadData,
         ),
       ),
     );
