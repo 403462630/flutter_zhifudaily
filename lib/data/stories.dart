@@ -6,6 +6,8 @@ class Stories {
   List<String> images;
   String gaPrefix;
 
+  String date;
+
   Stories({
     this.type,
     this.id,

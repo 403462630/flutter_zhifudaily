@@ -54,6 +54,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     setState(() {
       if (result.isSuccess()) {
         progressWidgetType = ProgressWidgetType.CONTENT;
+        result.data.stories[0].date = result.data.date;
         homeListAdapter.data = result.data.stories;
         homeListAdapter.homeNews = result.data;
         homeListAdapter.notifyNormal();
@@ -69,6 +70,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       Result<HomeNews> result = await ZhiFuNewsApi().getHomeNewsListMore(homeListAdapter.homeNews.date);
       setState(() {
         if (result.isSuccess()) {
+          result.data.stories[0].date = result.data.date;
           homeListAdapter.homeNews.stories.addAll(result.data.stories);
           homeListAdapter.homeNews.date = result.data.date;
           homeListAdapter.notifyNormal();

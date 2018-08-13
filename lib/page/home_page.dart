@@ -5,6 +5,7 @@ import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/fragment/home_fragment.dart';
 import 'package:flutter_zhifudaily/fragment/news_list_fragment.dart';
 import 'package:flutter_zhifudaily/page/home_drawer.dart';
+import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
 
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   List<NewsTheme> drawerData; // 暂时只能放在homepage里，因为每次打开drawer都会重新创建HomeDrawerState，无法保持数据
   NewsTheme index;
   int drawerIndex = 0;
+  bool isDark = false;
 
   @override
   void initState() {
@@ -104,7 +106,12 @@ class _HomePageState extends State<HomePage> {
           ];
         },
         onSelected: (value) {
-          showToast("暂无实现");
+          if (value == 1) {
+            isDark = !isDark;
+            setState(() {});
+          } else {
+            showToast("暂无实现");
+          }
         },
       ));
     } else {
@@ -119,6 +126,7 @@ class _HomePageState extends State<HomePage> {
       key: appBarKey,
       title: new Text("${drawerData[drawerIndex].name}", style: Style.buildTitleStyle()),
       actions: actions,
+      backgroundColor: isDark ? app_black : app_blue,
     );
   }
 

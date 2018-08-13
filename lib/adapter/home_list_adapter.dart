@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
 import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
+import 'package:flutter_zhifudaily/style/color.dart';
+import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/widget/home_banner.dart';
+import 'package:intl/intl.dart';
 
 typedef void OnItemClick(BuildContext context, Stories data);
 
@@ -46,8 +49,6 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
         return onCreateBannerWidget(context);
       case TYPE_HOME_CONTENT:
         return onCreateContentWidget(context, position);
-      case TYPE_HOME_TITLE:
-        return onCreateTitleWidget(context);
       default:
         return null;
     }
@@ -69,12 +70,14 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
     );
   }
 
-  @protected
-  Widget onCreateTitleWidget(BuildContext context) {
+  Widget _createTitleWidget(BuildContext context, String date) {
     return new Container(
       height: 40.0,
-      padding: EdgeInsets.all(8.0),
-      child: new Text("今日要闻"),
+      padding: EdgeInsets.only(left: 15.0, top: 10.0),
+      child: new Text(_formatDate(date), style: new TextStyle(
+        color: app_gray,
+        fontSize: text_size_small
+      )),
     );
   }
 
@@ -83,7 +86,12 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
     int dataPosition = position - 1;
     Stories stories = getItem(dataPosition);
     String image = stories.images != null && stories.images.isNotEmpty ? stories.images[0] : null;
-    return new GestureDetector(
+    String date = stories.date;
+    List<Widget> widgets = [];
+    if (date != null && date.isNotEmpty) {
+      widgets.add(_createTitleWidget(context, date));
+    }
+    widgets.add(new GestureDetector(
       onTap: () {
         if (context != null) {
           itemClick(context, stories);
@@ -111,6 +119,21 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
           ],
         ),
       ),
+    ));
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets
     );
+  }
+
+  String _formatDate(String date) {
+    DateTime dateTime = DateTime.parse(date);
+    Duration duration = dateTime.difference(DateTime.now());
+    if (duration.inDays == 0) {
+      return "今日要闻";
+    } else {
+      DateFormat dateFormat = new DateFormat("MM月dd日");
+      return dateFormat.format(dateTime);
+    }
   }
 }
