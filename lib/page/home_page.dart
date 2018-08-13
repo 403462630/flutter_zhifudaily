@@ -6,6 +6,7 @@ import 'package:flutter_zhifudaily/fragment/home_fragment.dart';
 import 'package:flutter_zhifudaily/fragment/news_list_fragment.dart';
 import 'package:flutter_zhifudaily/page/home_drawer.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
+import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -91,14 +92,19 @@ class _HomePageState extends State<HomePage> {
     if (drawerIndex == 0) {
       actions.add(new IconButton( // action button
         icon: new Icon(Icons.notifications, color: Colors.white),
-        onPressed: () {  },
+        onPressed: () {
+          showToast("暂无实现");
+        },
       ));
       actions.add(new PopupMenuButton(
         itemBuilder: (BuildContext context) {
           return [
-            new PopupMenuItem(child: new Text("夜间模式")),
-            new PopupMenuItem(child: new Text("设置选项")),
+            new PopupMenuItem(child: new Text("夜间模式"), value: 1),
+            new PopupMenuItem(child: new Text("设置选项"), value: 2),
           ];
+        },
+        onSelected: (value) {
+          showToast("暂无实现");
         },
       ));
     } else {

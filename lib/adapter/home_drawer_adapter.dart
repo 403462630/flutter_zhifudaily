@@ -5,6 +5,7 @@ import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
+import 'package:flutter_zhifudaily/utils/ToastUtil.dart';
 
 typedef void ItemClick(NewsTheme data, int position);
 typedef void ItemCollectClick(NewsTheme data, int position);
@@ -76,7 +77,9 @@ class HomeDrawerAdapter extends StateBaseAdapter<NewsTheme> {
             children: <Widget>[
               new Expanded(
                 child: new GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    gotoLogin(context);
+                  },
                   child: new Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 10.0)),
@@ -93,7 +96,9 @@ class HomeDrawerAdapter extends StateBaseAdapter<NewsTheme> {
               ),
               new Expanded(
                 child: new GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    showToast("暂无实现");
+                  },
                   child: new Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 10.0)),
