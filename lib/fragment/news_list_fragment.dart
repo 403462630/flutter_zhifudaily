@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/news_list_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
+import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/result.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
 import 'package:flutter_zhifudaily/data/theme.dart';

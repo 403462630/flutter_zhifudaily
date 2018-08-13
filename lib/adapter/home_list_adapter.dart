@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
+import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
-import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/widget/home_banner.dart';
+
+typedef void OnItemClick(BuildContext context);
 
 class HomeListAdapter extends StateBaseAdapter<Stories> {
   static const int TYPE_HOME_BANNER = 1;
@@ -11,12 +13,14 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
   static const int TYPE_HOME_CONTENT = 3;
   int currentIndex;
   HomeNews homeNews;
+  OnItemClick itemClick;
 
   HomeListAdapter({
     List<Stories> data,
     this.currentIndex: 0,
     this.homeNews,
     ErrorStateClick errorClick,
+    this.itemClick,
   }) : super(data: data, errorClick: errorClick);
 
   @protected
@@ -79,26 +83,33 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
     int dataPosition = position - 1;
     Stories stories = getItem(dataPosition);
     String image = stories.images != null && stories.images.isNotEmpty ? stories.images[0] : null;
-    return new Container(
-      margin: EdgeInsets.only(bottom: 8.0, left: 12.0, right: 12.0),
-      padding: EdgeInsets.all(8.0),
-      color: Colors.white,
-      constraints: new BoxConstraints(
-        minHeight: 70.0,
-      ),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Expanded(
-            child: new DefaultTextStyle(
-              style: Style.buildItemTextStyle(),
-              child: new Text(stories.title),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
+    return new GestureDetector(
+      onTap: () {
+        if (context != null) {
+          itemClick(context);
+        }
+      },
+      child: new Container(
+        margin: EdgeInsets.only(bottom: 8.0, left: 12.0, right: 12.0),
+        padding: EdgeInsets.all(8.0),
+        color: Colors.white,
+        constraints: new BoxConstraints(
+          minHeight: 70.0,
+        ),
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Expanded(
+              child: new DefaultTextStyle(
+                style: Style.buildItemTextStyle(),
+                child: new Text(stories.title),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          image != null ? Image.network(image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth) : Padding(padding: EdgeInsets.only(left: 0.0)),
-        ],
+            image != null ? Image.network(image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth) : Padding(padding: EdgeInsets.only(left: 0.0)),
+          ],
+        ),
       ),
     );
   }

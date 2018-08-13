@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_zhifudaily/api/domain_config.dart';
 import 'package:flutter_zhifudaily/api/log_interceptor.dart';
 import 'package:flutter_zhifudaily/data/editor.dart';
+import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/result.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
 import 'package:flutter_zhifudaily/data/theme.dart';

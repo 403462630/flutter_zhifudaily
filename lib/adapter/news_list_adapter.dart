@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/state_base_adapter.dart';
+import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/stories.dart';
-import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
 import 'package:flutter_zhifudaily/style/dimen.dart';
 import 'package:flutter_zhifudaily/style/style.dart';

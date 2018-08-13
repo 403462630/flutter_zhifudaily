@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/adapter/home_list_adapter.dart';
 import 'package:flutter_zhifudaily/api/zhi_hu_news_api.dart';
+import 'package:flutter_zhifudaily/data/news.dart';
 import 'package:flutter_zhifudaily/data/result.dart';
-import 'package:flutter_zhifudaily/data/theme.dart';
 import 'package:flutter_zhifudaily/style/color.dart';
+import 'package:flutter_zhifudaily/utils/RouteUtil.dart';
 import 'package:flutter_zhifudaily/widget/progress_widget.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -28,6 +29,9 @@ class _HomeFragmentState extends State<HomeFragment> {
         homeListAdapter.notifyLoading();
         setState(() {});
         loadMore();
+      },
+      itemClick: (context) {
+        gotoWebView(context);
       }
     );
     scrollController = new ScrollController();

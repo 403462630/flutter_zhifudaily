@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhifudaily/page/login_page.dart';
+import 'package:flutter_zhifudaily/page/news_detail_page.dart';
 
 void gotoLogin(BuildContext context) {
   Navigator.of(context).push(new PageRouteBuilder(
@@ -18,3 +19,25 @@ void gotoLogin(BuildContext context) {
       }
   ));
 }
+
+void gotoWebView(BuildContext context) {
+  Navigator.of(context).push(new PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return new NewsDetailPage();
+      },
+      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+//        return new FadeTransition(
+//          child: new ScaleTransition(
+//            child: child,
+//            scale: new Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+//          ),
+//          opacity: animation,
+//        );
+        return new SlideTransition(
+          child: child,
+          position: new Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero).animate(animation),
+        );
+      }
+  ));
+}
+
