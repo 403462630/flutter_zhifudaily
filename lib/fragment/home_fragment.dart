@@ -30,8 +30,8 @@ class _HomeFragmentState extends State<HomeFragment> {
         setState(() {});
         loadMore();
       },
-      itemClick: (context) {
-        gotoWebView(context);
+      itemClick: (context, data) {
+        gotoWebView(context, data.id);
       }
     );
     scrollController = new ScrollController();

@@ -20,10 +20,10 @@ void gotoLogin(BuildContext context) {
   ));
 }
 
-void gotoWebView(BuildContext context) {
+void gotoWebView(BuildContext context, int id) {
   Navigator.of(context).push(new PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-        return new NewsDetailPage();
+        return new NewsDetailPage(id: id);
       },
       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
 //        return new FadeTransition(

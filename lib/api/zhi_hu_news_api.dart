@@ -36,6 +36,9 @@ abstract class ZhiFuNewsApi {
 
   /// 首页新闻列表--加载历史
   Future<Result<HomeNews>> getHomeNewsListMore(String date);
+
+  /// 新闻详情
+  Future<Result<NewsDetail>> getNewsDetail(int id);
 }
 
 class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
@@ -154,6 +157,20 @@ class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
           stories: data["stories"] != null ? (data["stories"] as List).map((t) => Stories.fromJson(t)).toList() : null,
           date: data["date"],
         );
+      });
+      return result;
+    } catch (e) {
+      print(e);
+      return new Result(code: 500, message: "网络异常");
+    }
+  }
+
+  @override
+  Future<Result<NewsDetail>> getNewsDetail(int id) async {
+    try {
+      Response response = await _dio.get("api/4/news/$id");
+      Result<NewsDetail> result = _parseResponse(response, (data) {
+        return NewsDetail.fromJson(data);
       });
       return result;
     } catch (e) {

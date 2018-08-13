@@ -5,7 +5,7 @@ import 'package:flutter_zhifudaily/data/stories.dart';
 import 'package:flutter_zhifudaily/style/style.dart';
 import 'package:flutter_zhifudaily/widget/home_banner.dart';
 
-typedef void OnItemClick(BuildContext context);
+typedef void OnItemClick(BuildContext context, Stories data);
 
 class HomeListAdapter extends StateBaseAdapter<Stories> {
   static const int TYPE_HOME_BANNER = 1;
@@ -86,7 +86,7 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
     return new GestureDetector(
       onTap: () {
         if (context != null) {
-          itemClick(context);
+          itemClick(context, stories);
         }
       },
       child: new Container(
