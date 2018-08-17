@@ -60,7 +60,7 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
       child: Stack(
         children: <Widget>[
           new SizedBox.expand(
-            child: new Image.network(themeNews.image, fit: BoxFit.cover),
+            child: FadeInImage.assetNetwork(placeholder: "images/ic_image_placeholder.png", image: themeNews.image, fit: BoxFit.cover),
           ),
           new Positioned(
             left: 15.0,
@@ -120,6 +120,7 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
 
   @protected
   Widget onCreateNewsWidget(BuildContext context, int position) {
+
     int dataPosition = position - 2;
     Stories stories = getItem(dataPosition);
     String image = stories.images != null && stories.images.isNotEmpty ? stories.images[0] : null;
@@ -145,7 +146,9 @@ class NewsListAdapter extends StateBaseAdapter<Stories> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            image != null ? Image.network(image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth) : Padding(padding: EdgeInsets.only(left: 0.0)),
+            image != null
+                ? FadeInImage.assetNetwork(placeholder: "images/ic_image_placeholder.png", image: image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth)
+                : Padding(padding: EdgeInsets.only(left: 0.0)),
           ],
         ),
       ),

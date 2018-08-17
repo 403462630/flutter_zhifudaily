@@ -81,7 +81,8 @@ class _HomeBannerState extends State<HomeBanner> {
                     onTap: () {
                       gotoNewsDetailPage(context, widget._dataController.data[index].id);
                     },
-                    child: new Image.network(widget._dataController.data[index].image, fit: BoxFit.fill),
+//                    child: new Image.network(widget._dataController.data[index].image, fit: BoxFit.fill),
+                    child: FadeInImage.assetNetwork(placeholder: "images/ic_image_placeholder.png", image: widget._dataController.data[index].image, fit: BoxFit.fill),
                   ),
                 ),
                 new Container(

@@ -37,6 +37,7 @@ flutter:
     - images/ic_collect.png
     - images/ic_sina.png
     - images/ic_tencent.png
+    - images/ic_image_placeholder.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

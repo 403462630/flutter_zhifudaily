@@ -115,7 +115,9 @@ class HomeListAdapter extends StateBaseAdapter<Stories> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            image != null ? Image.network(image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth) : Padding(padding: EdgeInsets.only(left: 0.0)),
+            image != null
+                ? FadeInImage.assetNetwork(placeholder: "images/ic_image_placeholder.png", image: image, width: 100.0, height: 70.0, fit: BoxFit.fitWidth)
+                : Padding(padding: EdgeInsets.only(left: 0.0)),
           ],
         ),
       ),
