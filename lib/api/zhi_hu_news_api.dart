@@ -13,8 +13,7 @@ import 'package:dio/dio.dart';
 
 abstract class ZhiFuNewsApi {
   static _ZhiFuNewsApiImpl _apiImpl;
-  ZhiFuNewsApi.protected();
-
+  ZhiFuNewsApi._();
   factory ZhiFuNewsApi() {
     if (_apiImpl == null) {
       _apiImpl = new _ZhiFuNewsApiImpl();
@@ -44,7 +43,7 @@ abstract class ZhiFuNewsApi {
 class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
 
   Dio _dio;
-  _ZhiFuNewsApiImpl() : super.protected() {
+  _ZhiFuNewsApiImpl():super._() {
     Options options = new Options(
       baseUrl: DomainConfig.getDomain(DomainType.ZHI_HU_DOMAIN),
       connectTimeout: 5000,
@@ -179,4 +178,3 @@ class _ZhiFuNewsApiImpl extends ZhiFuNewsApi {
     }
   }
 }
-
