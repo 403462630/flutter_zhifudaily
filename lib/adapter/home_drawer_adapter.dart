@@ -23,7 +23,8 @@ class HomeDrawerAdapter extends StateBaseAdapter<NewsTheme> {
     this.itemClick,
     this.collectClick,
     this.selectedIndex = 0,
-  }) : super(data: data);
+    ErrorStateClick errorClick,
+  }) : super(data: data, errorClick: errorClick);
 
   @override
   int getDataCount() {
